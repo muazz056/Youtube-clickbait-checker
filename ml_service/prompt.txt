@@ -1,0 +1,112 @@
+"1. Mock Data (src/data.js)  
+Create a mock data file to simulate backend responses. This will define the data structures your components will use.  
+Export a constant `LLMS` which is an array of LLM objects. Each object must have: `id`, `name`, and `eloScore`.  
+Export a constant `SCENARIOS` which is an array of role-playing prompt strings.  
+
+```js
+// Example structure
+export const LLMS = [
+  { id: 'llm-001', name: 'Celestial-AI', eloScore: 1600 },
+  { id: 'llm-002', name: 'QuantumMind', eloScore: 1550 },
+  // ... more LLMs
+];
+
+export const SCENARIOS = [
+  ""You are a cautious space merchant trying to sell rare alien artifacts to a skeptical galactic patrol officer."",
+  // ... more scenarios
+];
+
+Global Styles (src/index.css)
+Implement a dark-mode theme.
+
+Root element: #root must be styled as the root container.
+Background: #121212
+Text color: #E0E0E0
+Font: 'Roboto', sans-serif
+
+Theme Colors:
+Primary/Accent: #00BFFF (Deep Sky Blue)
+Card Background: #1E1E1E
+Win: #2ECC71
+Lose: #E74C3C
+
+Layout: Use Flexbox for layout across all main views.
+All interactive elements (buttons, links) must have visible focus states and accessible labels.
+
+Main Application (src/App.jsx)
+This component manages the view and data state.
+
+State (via useState):
+view: 'arena' | 'leaderboard' (default: 'arena')
+leaderboardData: LLM list from data.js
+currentMatchup: { scenario, modelA, modelB }
+
+Functions:
+startNewRound():
+Randomly select one scenario from SCENARIOS
+Randomly select two different LLMs for the matchup
+
+handleVote(winnerId, loserId)
+Increase winner's eloScore by +10, decrease loser's by -10
+Then call startNewRound()
+
+UI:
+Wrap the entire app in #root
+A <header> with the title: ""LLM Role-Play Arena""
+Navigation buttons to toggle between Arena and Leaderboard views
+If view === 'arena', render .arena-container
+If view === 'leaderboard', render .leaderboard-container
+
+Arena Component (src/components/Arena.jsx)
+This view shows the current scenario and two anonymized LLMs.
+
+Props:
+matchup: scenario, modelA, modelB
+onVote: voting handler
+
+State:
+isModalOpen: toggle for results modal
+voteResult: stores { winner, loser }
+
+UI & Structure:
+Show the scenario inside a .scenario element
+Main flex container .battle-ground with two .model-card columns
+Each card shows:
+Label: ""Model A""/""Model B""
+Placeholder response
+A vote button
+A third button: ""It's a Tie""
+After vote, display <ResultsModal />
+
+Results Modal (src/components/ResultsModal.jsx)
+Displays the winning model and their identities.
+
+Props:
+isOpen, result, onClose
+
+UI:
+Modal wrapper .modal-overlay
+Content inside .modal-content
+Text:
+""Model A was [name]"" / ""Model B was [name]""
+""[Winner name] wins!"" (styled with win color)
+""Start Next Round"" button triggers onClose()
+
+Leaderboard Component (src/components/Leaderboard.jsx)
+Displays LLMs sorted by their eloScore.
+
+Props:
+data: array of LLMs
+
+UI:
+Outer wrapper: .leaderboard-container
+Table with <thead> and <tbody>
+Headers: #, Model Name, Elo Score
+Each row corresponds to an LLM
+Rows must be sorted by descending eloScore
+
+Final Notes:
+Ensure all elements used in E2E tests exist in code:
+#root, .arena-container, .leaderboard-container, .scenario, .battle-ground
+Use file path comments like <!-- src/App.jsx --> at the top of each source file.
+Ensure proper accessibility: all buttons must be visible, focusable, and labeled."
